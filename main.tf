@@ -55,6 +55,13 @@ module "rds" {
   database_instance_class      = var.database_instance_class
   availability_zone_1          = module.vpc.availability_zone_1
   database_instance_identifier = var.database_instance_identifier
-  multiaz_enabled              = var.multiaz_enabled
+  multi_az_deployment          = var.multi_az_deployment
   database_security_group_id   = module.security_group.rds_security_group_id
+}
+
+# request ssl certificate
+module "ssl_certificate" {
+  source            = "git@github.com:hashim1sharif/terraform-modules.git//acm"
+  domain_name       = var.domain_name       # adjust this to your domain name
+  alternative_names = var.alternative_names # adjust this to your alternative names if needed
 }
