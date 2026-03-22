@@ -65,3 +65,16 @@ module "ssl_certificate" {
   domain_name       = var.domain_name       # adjust this to your domain name
   alternative_names = var.alternative_names # adjust this to your alternative names if needed
 }
+
+# create application load balancer
+module "application_load_balancer" {
+  source                = "git@github.com:hashim1sharif/terraform-modules.git//alb"
+  project_name          = local.project_name
+  environment           = local.environment
+  alb_security_group_id = module.security_group.alb_security_group_id
+  public_subnet_id_1    = module.vpc.public_subnet_az1_id
+  public_subnet_id_2    = module.vpc.public_subnet_az2_id
+  target_type           = var.target_type
+  vpc_id                = module.vpc.vpc_id
+  certificate_arn       = module.ssl_certificate.certificate_arn
+}
