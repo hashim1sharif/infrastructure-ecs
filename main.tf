@@ -78,3 +78,19 @@ module "application_load_balancer" {
   vpc_id                = module.vpc.vpc_id
   certificate_arn       = module.ssl_certificate.certificate_arn
 }
+
+# create s3 bucket
+module "s3_bucket" {
+  source               = "git@github.com:hashim1sharif/terraform-modules.git//s3"
+  project_name         = local.project_name
+  env_file_bucket_name = var.env_file_bucket_name
+  env_file_name        = var.env_file_name
+}
+
+# create ecs task execution
+module "ecs_task_execution" {
+  source               = "git@github.com:hashim1sharif/terraform-modules.git//ecs-task-execution"
+  project_name         = local.project_name
+  env_file_bucket_name = module.s3_bucket.env_file_bucket_name
+  environment          = local.environment
+}
